@@ -1,14 +1,20 @@
 const pg = require('pg');
 const argv = process.argv[2]
 
-pg.defaults.ssl = true;
-pg.connect(process.env.???? function(err, client) {
-  if (err) throw err;
-  console.log('Connected to postgres! Getting schemas...');
+client.connect((err) => {
+  if (err) {
+    return console.error("Connection Error", err);
+  } console.log('Searching...')
+  client.query("SELECT * FROM famous_people WHERE last_name =$1 OR first_name =$1;", [lastName], (err, result) => {
+    if (err) throw err;
+      console.log(`Found someone! \n`)
+      if (result.rowCount) {
+        result = result.rows[0];
+        console.log(`${result.id}: ${result.first_name} ${result.last_name}, born ${result.birthdate.toDateString()}`)
+      }else{
+        console.log(`I lied. Found no one`)
+      }
 
-  client
-    .query('SELECT last_name FROM famous_people.tables;')
-    .on('row', function(row) {
-      console.log(JSON.stringify(row));
-    });
-});
+    client.end();
+  });
+})
